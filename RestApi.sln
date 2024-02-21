@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Movies", "Movies", "{061C2E8D-7D0D-414C-9496-679C25CD9DC6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.Api", "Movies.Api\Movies.Api.csproj", "{559A95FA-4774-4B6B-ABAC-93D12FBA6882}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.Application", "Movies.Application\Movies.Application.csproj", "{61B6DD71-90FB-4B1E-BB8D-D3174ED5A7E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.Contracts", "Movies.Contracts\Movies.Contracts.csproj", "{0FF074D1-BAB6-4905-8BAE-CC8DE10B57E9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{559A95FA-4774-4B6B-ABAC-93D12FBA6882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{559A95FA-4774-4B6B-ABAC-93D12FBA6882}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{559A95FA-4774-4B6B-ABAC-93D12FBA6882}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{559A95FA-4774-4B6B-ABAC-93D12FBA6882}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61B6DD71-90FB-4B1E-BB8D-D3174ED5A7E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61B6DD71-90FB-4B1E-BB8D-D3174ED5A7E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61B6DD71-90FB-4B1E-BB8D-D3174ED5A7E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61B6DD71-90FB-4B1E-BB8D-D3174ED5A7E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FF074D1-BAB6-4905-8BAE-CC8DE10B57E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FF074D1-BAB6-4905-8BAE-CC8DE10B57E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FF074D1-BAB6-4905-8BAE-CC8DE10B57E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FF074D1-BAB6-4905-8BAE-CC8DE10B57E9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{559A95FA-4774-4B6B-ABAC-93D12FBA6882} = {061C2E8D-7D0D-414C-9496-679C25CD9DC6}
+		{61B6DD71-90FB-4B1E-BB8D-D3174ED5A7E4} = {061C2E8D-7D0D-414C-9496-679C25CD9DC6}
+		{0FF074D1-BAB6-4905-8BAE-CC8DE10B57E9} = {061C2E8D-7D0D-414C-9496-679C25CD9DC6}
+	EndGlobalSection
+EndGlobal
