@@ -2,18 +2,19 @@ using Microsoft.AspNetCore.Mvc;
 using Movies.Api.Mapping;
 using Movies.Application.Models;
 using Movies.Application.Repositories;
+using Movies.Application.Services;
 using Movies.Contracts.Requests;
 
 namespace Movies.Api.Controllers;
 
 [ApiController]
-public class MoviesController(IMovieRepository movieRepository) : ControllerBase
+public class MoviesController(IMovieService movieService) : ControllerBase
 {
     [HttpPost(ApiEndpoints.Movies.Create)]
     public async Task<ActionResult> Create([FromBody]CreateMovieRequest request)
     {
         var movie = request.MapToMovie();
-        await movieRepository.CreateAsync(movie);
+        await movieService.CreateAsync(movie);
         
         //return Created($"/{ApiEndpoints.Movies.Create}/{movie.Id}", movie);               // do same things, but second
         return CreatedAtAction(nameof(Get), new { idOrSlug = movie.Id }, movie);   // way better 
@@ -23,8 +24,8 @@ public class MoviesController(IMovieRepository movieRepository) : ControllerBase
     public async Task<IActionResult> Get([FromRoute] string idOrSlug)
     {
         var movie = Guid.TryParse(idOrSlug, out var id)
-            ? await movieRepository.GetByIdAsync(id)
-            : await movieRepository.GetBySlugAsync(idOrSlug);
+            ? await movieService.GetByIdAsync(id)
+            : await movieService.GetBySlugAsync(idOrSlug);
         if (movie is null)
         {
             return NotFound();
@@ -37,7 +38,7 @@ public class MoviesController(IMovieRepository movieRepository) : ControllerBase
     [HttpGet(ApiEndpoints.Movies.GetAll)]
     public async Task<IActionResult> GetAll()
     {
-        var movies = await movieRepository.GetAllAsync();
+        var movies = await movieService.GetAllAsync();
 
         var moviesResponse = movies.MapToResponse();
         return Ok(moviesResponse);
@@ -49,20 +50,20 @@ public class MoviesController(IMovieRepository movieRepository) : ControllerBase
     {
         var movie = updateMovieRequest.MapToMovie(id);
 
-        var update = await movieRepository.UpdateAsync(movie);
-        if (!update)
+        var updatedMovie = await movieService.UpdateAsync(movie);
+        if (updatedMovie is null)
         {
             return NotFound();
         }
 
-        var response = movie.MapToResponse();
+        var response = updatedMovie.MapToResponse();
         return Ok(response);
     }
 
     [HttpDelete(ApiEndpoints.Movies.Delete)]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
-        var deleted = await movieRepository.DeleteAsync(id);
+        var deleted = await movieService.DeleteAsync(id);
         if (!deleted)
         {
             return NotFound();
