@@ -2,7 +2,7 @@ using Movies.Application.Models;
 
 namespace Movies.Application.Repositories;
 
-public class MovieRepository: IMovieRepository
+public class MovieRepositoryInMemory: IMovieRepository
 {
     private List<Movie> _movies = new ();
     public Task<bool> CreateAsync(Movie movie)
@@ -45,5 +45,10 @@ public class MovieRepository: IMovieRepository
         var removedMovies = _movies.RemoveAll(x => x.Id == id);
         var movieRemoved = removedMovies > 0;
         return Task.FromResult(movieRemoved);
+    }
+
+    public Task<bool> ExistedByIdAsync(Guid id)
+    {
+        return Task.FromResult(_movies.Exists(m => m.Id == id));
     }
 }
