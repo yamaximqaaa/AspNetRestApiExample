@@ -26,13 +26,21 @@ public class DbInitializer
         await connection.ExecuteAsync("""
                                         create unique index concurrently if not exists movies_slug_idx
                                         on movies
-                                        using btree(slug) ;
+                                        using btree(slug);
                                         """);
         
         await connection.ExecuteAsync("""
                                       create table if not exists genres(
                                           movieId uuid references movies (id),
                                           name TEXT not null);
+                                      """);
+
+        await connection.ExecuteAsync("""
+                                      create table if not exists ratings (
+                                          userid uuid,
+                                          movieid uuid references movies (id),
+                                          rating integer not null,
+                                          primary key (userid, movieid));
                                       """);
     }
 }
