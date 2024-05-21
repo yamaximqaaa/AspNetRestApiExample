@@ -45,8 +45,14 @@ public class MovieRepositoryDb: IMovieRepository
         using var connection = await _dbConnection.CreateConnectionAsync(cancellationToken);
         var movie = await connection.QuerySingleOrDefaultAsync<Movie>(
             new CommandDefinition("""
-                                  select * from movies where id = @id
-                                  """, new { id }, 
+                                  select m.*, round(avg(r.rating), 1) as rating, myr.rating as userrating
+                                  from movies m
+                                  left join ratings r on m.id = r.movieid
+                                  left join ratings myr on m.id = myr.movieid
+                                    and myr.userId = @userId
+                                  where id = @id
+                                  group by id, userrating
+                                  """, new { id, userId }, 
                 cancellationToken: cancellationToken));
         if (movie is null)
             return null;
@@ -70,8 +76,14 @@ public class MovieRepositoryDb: IMovieRepository
         using var connection = await _dbConnection.CreateConnectionAsync(cancellationToken);
         var movie = await connection.QuerySingleOrDefaultAsync<Movie>(
             new CommandDefinition("""
-                                  select * from movies where slug = @slug
-                                  """, new { slug }, 
+                                  select m.*, round(avg(r.rating), 1) as rating, myr.rating as userrating
+                                  from movies m
+                                  left join ratings r on m.id = r.movieid
+                                  left join ratings myr on m.id = myr.movieid
+                                    and myr.userId = @userId
+                                  where slug = @slug
+                                  group by id, userrating
+                                  """, new { slug, userId }, 
                 cancellationToken: cancellationToken));
         if (movie is null)
             return null;
@@ -96,10 +108,17 @@ public class MovieRepositoryDb: IMovieRepository
         using var connection = await _dbConnection.CreateConnectionAsync(cancellationToken);
         var result = await connection.QueryAsync(
             new CommandDefinition("""
-                                  select m.*, string_agg(g.name, ',') as genres
-                                  from movies m left join genres g on m.id = g.movieid
-                                  group by id
-                                  """, cancellationToken: cancellationToken)
+                                  select m.*, 
+                                         string_agg( distinct g.name, ',') as genres, 
+                                         round(avg(r.rating), 1) as rating, 
+                                         myr.rating as userrating
+                                  from movies m 
+                                  left join genres g on m.id = g.movieid
+                                  left join ratings r on m.id = r.movieid
+                                  left join ratings myr on m.id = myr.movieid
+                                        and myr.userId = @userId
+                                  group by id, userrating
+                                  """, new { userId }, cancellationToken: cancellationToken)
             );
 
         return result.Select(x => new Movie
@@ -107,11 +126,13 @@ public class MovieRepositoryDb: IMovieRepository
             Id = x.id,
             Title = x.title,
             YearOfRelease = x.yearofrelease,
+            Rating = (float?)x.rating,
+            UserRating = (int?)x.userrating,
             Genres = Enumerable.ToList(x.genres.Split(','))
         });
     }
 
-    public async Task<bool> UpdateAsync(Movie movie, Guid? userId = default, CancellationToken cancellationToken = default)
+    public async Task<bool> UpdateAsync(Movie movie, CancellationToken cancellationToken = default)
     {
         using var connection = await _dbConnection.CreateConnectionAsync(cancellationToken);
         var transaction = connection.BeginTransaction();

@@ -37,10 +37,10 @@ public class DbInitializer
 
         await connection.ExecuteAsync("""
                                       create table if not exists ratings (
-                                          userid uuid,
-                                          movieid uuid references movies (id),
+                                          userId uuid,
+                                          movieId uuid references movies (id),
                                           rating integer not null,
-                                          primary key (userid, movieid));
+                                          primary key (userId, movieId));
                                       """);
     }
 }
