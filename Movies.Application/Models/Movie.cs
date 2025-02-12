@@ -19,11 +19,11 @@ public partial class Movie
 
     private string GenerateSlug()
     {
-        var sluggedTitle = MyRegex().Replace(Title, String.Empty)
+        var sluggedTitle = SlugRegex().Replace(Title, String.Empty)
             .ToLower().Replace(" ", "-");
         return $"{sluggedTitle}-{YearOfRelease}";
     }
 
     [GeneratedRegex("[^0-9A-Za-z _-]", RegexOptions.NonBacktracking, 5)]
-    private static partial Regex MyRegex();
+    private static partial Regex SlugRegex();
 }

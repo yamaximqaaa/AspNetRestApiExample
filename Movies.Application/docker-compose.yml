@@ -4,7 +4,7 @@ services:
 
   db:
     image: postgres:latest
-    restart: always
+    restart: no
     environment: 
       - POSTGRES_USER=usr
       - POSTGRES_PASSWORD=usr

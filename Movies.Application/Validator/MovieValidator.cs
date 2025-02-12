@@ -7,7 +7,7 @@ namespace Movies.Application.Validator;
 
 public class MovieValidator: AbstractValidator<Movie>
 {
-    public readonly IMovieRepository _movieRepository;
+    private readonly IMovieRepository _movieRepository;
     public MovieValidator(IMovieRepository movieRepository)
     {
         _movieRepository = movieRepository;
@@ -17,7 +17,16 @@ public class MovieValidator: AbstractValidator<Movie>
 
         RuleFor(x => x.Genres)
             .NotEmpty();
-
+        
+        // -- This is redundant, in update delete all and create again --
+        // RuleFor(x => x.Genres)
+        //     .MustAsync(ValidateGenresInDb)
+        //     .WithMessage("Try to insert a dublicate genre for this movie");
+        
+        RuleFor(x => x.Genres)
+            .Must(x => x.Distinct().Count() == x.Count)
+            .WithMessage("Dublicates in genres array");
+        
         RuleFor(x => x.Title)
             .NotEmpty();
 
@@ -31,12 +40,20 @@ public class MovieValidator: AbstractValidator<Movie>
 
     private async Task<bool> ValidateSlug(Movie movie, string slug, CancellationToken cancellationToken)
     {
-        var existingMovie = await _movieRepository.GetBySlugAsync(slug);
+        var existingMovie = await _movieRepository.GetBySlugAsync(slug, cancellationToken: cancellationToken);
         if (existingMovie is not null)
         {
             return existingMovie.Id == movie.Id;
         }
 
         return existingMovie is null;
+    }
+
+    private async Task<bool> ValidateGenresInDb(Movie movie, IEnumerable<string> genres,
+        CancellationToken cancellationToken)
+    {
+        var existingGenres = await _movieRepository.ExistedGenres(movie.Id, genres, cancellationToken);
+        
+        return existingGenres.ToList().Count == 0;
     }
 }

@@ -47,8 +47,8 @@ public class IdentityController : ControllerBase
         {
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.Add(TokenLifetime),
-            Issuer = "MoviesRatings.com",
-            Audience = "movies.api.com",
+            Issuer = "identity.MovieRatings.com",
+            Audience = "movies.MovieRatings.com",
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
         

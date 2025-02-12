@@ -14,7 +14,7 @@ public class ApiEndpoints
         public const string Update = $"{Base}/{{id:guid}}";
         public const string Delete = $"{Base}/{{id:guid}}";
 
-        public const string Rate = $"{Base}/{{id:guid}}/ratings";
+        public const string Rate = $"{Base}/{{movieId:guid}}/ratings";
         public const string DeleteRating = $"{Base}/{{id:guid}}/ratings";
     }
 
@@ -23,5 +23,6 @@ public class ApiEndpoints
         private const string Base = $"{ApiBase}/ratings";
         
         public const string GetUserRatings = $"{Base}/me";
+        public const string Create = Base;
     }
 }

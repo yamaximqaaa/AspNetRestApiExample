@@ -187,4 +187,16 @@ public class MovieRepositoryDb: IMovieRepository
             select count(1) from movies where id = @id
             """, new { id }, cancellationToken: cancellationToken));
     }
+
+    public async Task<IEnumerable<string>> ExistedGenres(Guid movieId, IEnumerable<string> genres, 
+        CancellationToken cancellationToken = default)
+    {
+        using var connection = await _dbConnection.CreateConnectionAsync(cancellationToken);
+        var result = await connection.QueryAsync<string>(new CommandDefinition(
+            """
+            select name from genres where movieid = @id and name = any(@genresList)
+            """, new { id = movieId, genresList = genres.ToList() }, cancellationToken: cancellationToken));
+        
+        return result;
+    }
 }
