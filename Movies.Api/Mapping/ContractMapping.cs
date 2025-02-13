@@ -41,12 +41,37 @@ public static class ContractMapping
             UserRating = movie.UserRating,
         };
     }
-
+    
     public static MoviesResponse MapToResponse(this IEnumerable<Movie> movies)
     {
         return new MoviesResponse
         {
             Items = movies.Select(MapToResponse)
         };
+    }
+
+    public static IEnumerable<MovieRatingResponse> MapToResponse(this IEnumerable<MovieRating> movieRatings)
+    {
+        return movieRatings.Select(x => new MovieRatingResponse
+        {
+            Rating = x.Rating,
+            Slug = x.Slug,
+            MovieId = x.MovieId
+        });
+    }
+
+    public static GetAllMoviesOptions MapToOptions(this GetAllMoviesRequest request)
+    {
+        return new GetAllMoviesOptions
+        {
+            Title = request.Title,
+            Year = request.Year
+        };
+    }
+
+    public static GetAllMoviesOptions WithUser(this GetAllMoviesOptions options, Guid? userId)
+    {
+        options.UserId = userId;
+        return options;
     }
 }

@@ -103,22 +103,27 @@ public class MovieRepositoryDb: IMovieRepository
         return movie;
     }
 
-    public async Task<IEnumerable<Movie>> GetAllAsync(Guid? userId = default, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Movie>> GetAllAsync(GetAllMoviesOptions options, CancellationToken cancellationToken = default)
     {
         using var connection = await _dbConnection.CreateConnectionAsync(cancellationToken);
         var result = await connection.QueryAsync(
             new CommandDefinition("""
-                                  select m.*, 
-                                         string_agg( distinct g.name, ',') as genres, 
-                                         round(avg(r.rating), 1) as rating, 
-                                         myr.rating as userrating
-                                  from movies m 
-                                  left join genres g on m.id = g.movieid
-                                  left join ratings r on m.id = r.movieid
-                                  left join ratings myr on m.id = myr.movieid
-                                        and myr.userId = @userId
-                                  group by id, userrating
-                                  """, new { userId }, cancellationToken: cancellationToken)
+                  select m.*, 
+                         string_agg( distinct g.name, ',') as genres, 
+                         round(avg(r.rating), 1) as rating, 
+                         myr.rating as userrating
+                  from movies m 
+                  left join genres g on m.id = g.movieid
+                  left join ratings r on m.id = r.movieid
+                  left join ratings myr on m.id = myr.movieid
+                        and myr.userId = @userId
+                  where (@title is null or m.title like ('%' || @title || '%'))
+                  and (@year is null or m.yearofrelease = @year)
+                  group by id, userrating
+                  """, new { userId = options.UserId, 
+                            title = options.Title, 
+                            year = options.Year },
+                cancellationToken: cancellationToken)
             );
 
         return result.Select(x => new Movie
