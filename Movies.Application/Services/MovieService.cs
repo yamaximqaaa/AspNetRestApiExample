@@ -48,7 +48,7 @@ public class MovieService: IMovieService
     public async Task<Movie?> UpdateAsync(Movie movie, Guid? userId = default, 
         CancellationToken cancellationToken = default)
     {
-        await _movieValidator.ValidateAndThrowAsync(movie, cancellationToken);  // there is no need to be async
+        await _movieValidator.ValidateAndThrowAsync(movie, cancellationToken);
         var movieExist = await _movieRepository.ExistedByIdAsync(movie.Id, cancellationToken);
         if (!movieExist)
             return null;

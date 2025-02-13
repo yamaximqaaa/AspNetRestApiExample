@@ -65,7 +65,10 @@ public static class ContractMapping
         return new GetAllMoviesOptions
         {
             Title = request.Title,
-            Year = request.Year
+            Year = request.Year,
+            SortField = request.SortBy?.Trim('+', '-'),
+            SortOrder = request.SortBy is null ? SortOrder.Unsorted :
+                request.SortBy.StartsWith('-') ? SortOrder.Descending : SortOrder.Ascending,
         };
     }
 
