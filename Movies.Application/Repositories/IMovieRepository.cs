@@ -12,4 +12,5 @@ public interface IMovieRepository
     Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
     Task<bool> ExistedByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<IEnumerable<string>> ExistedGenres(Guid movieId, IEnumerable<string> genres, CancellationToken cancellationToken = default);
+    Task<int> GetCountAsync(string? title, int? yearOfRelese, CancellationToken token = default);
 }
