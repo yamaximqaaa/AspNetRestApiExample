@@ -4,6 +4,7 @@ using Movies.Api.Auth;
 using Movies.Api.Mapping;
 using Movies.Application.Services;
 using Movies.Contracts.Requests;
+using Movies.Contracts.Responses;
 
 namespace Movies.Api.Controllers;
 
@@ -37,6 +38,33 @@ public class MoviesController(IMovieService movieService) : ControllerBase
         }
 
         var response = movie.MapToResponse();
+        
+        /*  -- Example of usage HATEOAS --  
+        
+        // 1. add this to method params: [FromServices] LinkGenerator linkGenerator,
+        // 2. update MovieResponse class to -> public class MovieResponse : HalResponse
+        
+        var movieObj = new { id = movie.Id };
+        response.Links.Add(new Link
+        {
+            Href = linkGenerator.GetPathByAction(HttpContext, nameof(Get), values: new {idOrSlug = movie.Id}),
+            Rel = "self",
+            Type = "GET"
+        });
+        response.Links.Add(new Link
+        {
+            Href = linkGenerator.GetPathByAction(HttpContext, nameof(Update), values: movieObj),
+            Rel = "self",
+            Type = "PUT"
+        });
+        response.Links.Add(new Link
+        {
+            Href = linkGenerator.GetPathByAction(HttpContext, nameof(Delete), values: new {id = movie.Id}),
+            Rel = "self",
+            Type = "DELETE"
+        });
+        */
+        
         return Ok(response);
     }
 

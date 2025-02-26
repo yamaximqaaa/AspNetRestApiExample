@@ -23,7 +23,10 @@ public partial class Movie
             .ToLower().Replace(" ", "-");
         return $"{sluggedTitle}-{YearOfRelease}";
     }
-
-    [GeneratedRegex("[^0-9A-Za-z _-]", RegexOptions.NonBacktracking, 5)]
+    // TODO: Exception with this title name "Once Upon a Time... When We Were Colored" when timeout 5 ms 
+    // Uses GeneratedRegex to optimize regex compilation at compile-time.
+    // SlugRegex() is a partial method, and its implementation is auto-generated.
+    // This regex removes all characters except letters, numbers, spaces, underscores, and hyphens.
+    [GeneratedRegex("[^0-9A-Za-z _-]", RegexOptions.NonBacktracking, 10)]
     private static partial Regex SlugRegex();
 }
