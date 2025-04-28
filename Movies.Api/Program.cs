@@ -1,4 +1,5 @@
 using System.Text;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Movies.Api;
@@ -40,6 +41,16 @@ builder.Services.AddAuthorization(x =>
                 c.User.HasClaim(m => m is {Type: AuthConstants.AdminUserClaimName, Value: "true"}) ||
                 c.User.HasClaim(m => m is {Type: AuthConstants.TrustedUserClaimName, Value: "true"})));
 });
+
+builder.Services.AddApiVersioning(x =>
+{
+    x.DefaultApiVersion = new ApiVersion(1.0);
+    x.AssumeDefaultVersionWhenUnspecified = true;
+    x.ReportApiVersions = true;     // returns in header is version supported or deprecated 
+    x.ApiVersionReader = new MediaTypeApiVersionReader("api-version");  // binds place from where read version. 
+                                                                        // current example will read it from accept header 
+                                                                        // Example: Accept - application/json;api-version=2.0
+}).AddMvc();
 
 builder.Services.AddControllers();
 
