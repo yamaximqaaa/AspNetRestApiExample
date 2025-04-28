@@ -4,15 +4,14 @@ using Movies.Api.Auth;
 using Movies.Api.Mapping;
 using Movies.Application.Services;
 using Movies.Contracts.Requests;
-using Movies.Contracts.Responses;
 
-namespace Movies.Api.Controllers;
+namespace Movies.Api.Controllers.V1;
 
 [ApiController]
 public class MoviesController(IMovieService movieService) : ControllerBase
 {
     [Authorize(AuthConstants.TrustedUserPolicyName)]
-    [HttpPost(ApiEndpoints.Movies.Create)]
+    [HttpPost(ApiEndpoints.V1.Movies.Create)]
     public async Task<ActionResult> Create([FromBody]CreateMovieRequest request,
         CancellationToken cancellationToken)
     {
@@ -24,7 +23,7 @@ public class MoviesController(IMovieService movieService) : ControllerBase
     }
     
     [AllowAnonymous]
-    [HttpGet(ApiEndpoints.Movies.Get)]
+    [HttpGet(ApiEndpoints.V1.Movies.Get)]
     public async Task<IActionResult> Get([FromRoute] string idOrSlug,
         CancellationToken cancellationToken)
     {
@@ -69,7 +68,7 @@ public class MoviesController(IMovieService movieService) : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpGet(ApiEndpoints.Movies.GetAll)]
+    [HttpGet(ApiEndpoints.V1.Movies.GetAll)]
     public async Task<IActionResult> GetAll([FromQuery] GetAllMoviesRequest optionRequest, 
         CancellationToken cancellationToken)
     {
@@ -87,7 +86,7 @@ public class MoviesController(IMovieService movieService) : ControllerBase
     }
     
     [Authorize(AuthConstants.TrustedUserPolicyName)]
-    [HttpPut(ApiEndpoints.Movies.Update)]
+    [HttpPut(ApiEndpoints.V1.Movies.Update)]
     public async Task<IActionResult> Update([FromRoute]Guid id,
         [FromBody]UpdateMovieRequest updateMovieRequest,
         CancellationToken cancellationToken)
@@ -106,7 +105,7 @@ public class MoviesController(IMovieService movieService) : ControllerBase
     }
 
     [Authorize(AuthConstants.AdminUserPolicyName)]
-    [HttpDelete(ApiEndpoints.Movies.Delete)]
+    [HttpDelete(ApiEndpoints.V1.Movies.Delete)]
     public async Task<IActionResult> Delete([FromRoute] Guid id,
         CancellationToken cancellationToken)
     {
